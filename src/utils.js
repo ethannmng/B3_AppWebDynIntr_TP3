@@ -60,3 +60,47 @@ export const addRecipe = (recipe, addToStart) => {
         recipesContainer.appendChild(recipeNode);
     }
 };
+/**
+ * Crée une nouvelle recette en envoyant une requête POST à l'API.
+ */
+export const createNewRecipe = async () => {
+    try {
+        // On récupère les valeurs du formulaire
+        const name = document.querySelector('#name').value;
+        const rating = document.querySelector('#rating').value;
+        const reviewCount = document.querySelector('#reviewCount').value;
+        const prepTime = document.querySelector('#prepTime').value;
+        const cookTime = document.querySelector('#cookTime').value;
+        const cuisine = document.querySelector('#cuisine').value;
+        // Création de l'objet recette
+        // On créer une recette sans l'id car l'API le génère automatiquement (d'où le Omit)
+        const newRecipe = {
+            name: name,
+            rating: parseInt(rating, 10),
+            reviewCount: parseInt(reviewCount, 10),
+            prepTimeMinutes: parseInt(prepTime, 10),
+            cookTimeMinutes: parseInt(cookTime, 10),
+            cuisine: cuisine,
+            image: 'https://cdn.dummyjson.com/recipe-images/3.webp'
+        };
+        // Envoi de la requête POST à l'API
+        const response = await fetch('https://dummyjson.com/recipes/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newRecipe)
+        });
+        // Vérification de la requête
+        if (!response.ok) {
+            throw new Error(`Erreur lors de l'ajout de la recette: ${response.status}`);
+        }
+        const createdRecipe = await response.json();
+        // ADD: On ajoute la nouvelle recette à l'affichage
+        addRecipe(createdRecipe, true);
+        console.log('✅ Recette ajoutée avec succès:', createdRecipe);
+    }
+    catch (error) {
+        console.error('❌ Erreur lors de la création de la recette:', error);
+    }
+};

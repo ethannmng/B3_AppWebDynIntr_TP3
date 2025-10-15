@@ -76,7 +76,7 @@ export const addRecipe = (recipe: Recipe, addToStart: boolean) : void => {
 export const createNewRecipe = async () : Promise<void> => {
     try {
         // On récupère les valeurs du formulaire
-        const name (document.querySelector('#name') as HTMLInputElement).value;
+        const name = (document.querySelector('#name') as HTMLInputElement).value;
         const rating = (document.querySelector('#rating') as HTMLInputElement).value;
         const reviewCount = (document.querySelector('#reviewCount') as HTMLInputElement).value;
         const prepTime = (document.querySelector('#prepTime') as HTMLInputElement).value
@@ -110,6 +110,9 @@ export const createNewRecipe = async () : Promise<void> => {
         }
 
         const createdRecipe : Recipe = await response.json();
+
+        // ADD: On ajoute la nouvelle recette à l'affichage
+        addRecipe(createdRecipe, true);
 
         console.log('✅ Recette ajoutée avec succès:', createdRecipe);
     } catch (error) {
