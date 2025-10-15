@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "lib": ["es6", "dom", "es2016"],
+    "module": "esnext"
+  },
+  "include": ["src/**/*.ts"]
+}

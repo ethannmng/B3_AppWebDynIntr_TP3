@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Gestionnaire de recettes</title>
+
+        <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ["Lexend", "ui-sans-serif", "system-ui"],
+                        },
+                    },
+                },
+            };
+        </script>
+
+        <style>
+            .prose img {
+                @apply rounded-lg;
+            }
+        </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+                href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
+                rel="stylesheet"
+        />
+
+        <script type="module" src="src/main.js" defer></script>
+    </head>
+    <body>
+        <div class="container mx-auto px-4 py-8 space-y-8">
+            <header class="space-y-2">
+                <h1 class="text-4xl font-bold text-foreground text-balance">Catalogue de recettes</h1>
+                <p class="text-muted-foreground text-lg">
+                    Parcourez notre collection et ajoutez de nouvelles recettes
+                </p>
+            </header>
+            <form id="add-recipe" class="space-y-6 rounded-lg border border-border bg-card p-6">
+                <div class="space-y-2">
+                    <h2 class="text-2xl font-bold text-foreground">Ajouter une recette</h2>
+                    <p class="text-sm text-muted-foreground">Remplissez le formulaire pour ajouter une nouvelle recette</p>
+                </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div class="space-y-2 sm:col-span-2">
+                        <label class="flex items-center gap-2 text-sm select-none" for="name">Nom de la recette</label>
+                        <input class="border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm" id="name" placeholder="Ex: Tarte aux pommes" required="" type="text" value="">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm select-none" for="rating">Note (sur 5)</label>
+                        <input class="border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm" id="rating" placeholder="1 - 5" required="" type="number" value="" min="1" max="5">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm select-none" for="reviewCount">Nombre de votants</label>
+                        <input class="border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm" id="reviewCount" placeholder="Ex : 50" required="" type="number" value="">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm  select-none " for="prepTime">Durée de préparation (minutes)</label>
+                        <input class="border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm" id="prepTime" min="0" placeholder="Ex: 30" required="" type="number" value="">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm  select-none " for="cookTime">Durée de cuisson (minutes)</label>
+                        <input class="border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm" id="cookTime" min="0" placeholder="Ex: 45" required="" type="number" value="">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="flex items-center gap-2 text-sm  select-none " for="cuisine">Type de cuisine principal</label>
+                        <input class="border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm" id="cuisine" placeholder="Ex: Italien" required="" type="text" value="">
+                    </div>
+                </div>
+                <button class="border-2 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm transition-all bg-primary text-primary-foreground h-9 px-2 py-2 w-full sm:w-auto" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus mr-2 h-4 w-4">
+                        <path d="M5 12h14"></path>
+                        <path d="M12 5v14"></path>
+                    </svg>
+                    Ajouter la recette
+                </button>
+            </form>
+            <section class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-2xl font-semibold text-foreground">Toutes les recettes</h2>
+                </div>
+                <div id="recipes-container" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                </div>
+            </section>
+        </div>
+
+        <template id="recipe-template">
+            <div class="group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:border-primary/50 hover:shadow-lg">
+                <div class="relative aspect-[4/3] overflow-hidden bg-muted">
+                    <img src="" alt="" class="object-cover transition-transform duration-300 group-hover:scale-105" style="position: absolute; height: 100%; width: 100%; inset: 0; color: transparent;">
+                </div>
+                <div class="p-4 space-y-3">
+                    <div class="space-y-1">
+                        <h3 class="recipe-name font-semibold text-lg text-foreground line-clamp-2 text-balance">RECIPE NAME</h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm text-primary"><span class="recipe-rating">NOTE</span>/5</span>
+                            <span class="text-xs text-muted-foreground">(<span class="recipe-rating-count">RATING COUNT</span> avis)</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chef-hat h-4 w-4 text-muted-foreground">
+                            <path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z"></path>
+                            <path d="M6 17h12"></path>
+                        </svg>
+                        <span class="recipe-cuisine-type text-sm text-muted-foreground">CUISINE TYPE</span>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm">
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 text-muted-foreground">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span class="text-muted-foreground">Préparation:
+                                <span class="recipe-prep-time text-foreground">TEMPS PREPARATION</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm">
+                        <div class="flex items-center gap-1.5">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock h-4 w-4 text-muted-foreground">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span class="text-muted-foreground">Cuisson:
+                                <span class="recipe-cooking-time text-foreground">TEMPS CUISSON</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="recipe-tags-container flex flex-wrap gap-1.5">
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="recipe-tag-template">
+            <span class="recipe-tag inline-flex items-center justify-center rounded-md border px-2 py-0.5 w-fit whitespace-nowrap shrink-0 text-xs">NAME</span>
+        </template>
+    </body>
+</html>
